@@ -1,0 +1,5 @@
+id;nom;email;motDePasse;role
+1;Meryem;Meryem@gmail.com;newPass123;Admin
+2;Sara;Sara@gmail.com;password;Admin
+3;Salma;Salma@gmail.com;admin123;Admin
+4;Bob;bob@outlook.com;password;Membre
