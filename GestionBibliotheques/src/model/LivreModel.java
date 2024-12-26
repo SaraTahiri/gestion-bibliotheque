@@ -75,15 +75,28 @@ public class LivreModel implements LivreModelInterface {
 			return livre.get();
 		return null;
 	}
+	
+	public Livre rechercherParTitre(String titre) {
+		Optional<Livre> livre=liste.stream().filter(t->t.getTitre()==titre).findFirst();
+		if(livre.isPresent())
+			return livre.get();
+		return null;
+	}
 
 	@Override
 	public void listerLivres() {
 		// TODO Auto-generated method stub
 		System.out.println(liste);
 	}
+	
+	public ArrayList<Livre> getListe(){
+		return liste;
+	}
 
 	@Override
 	public void sauvegarderCSV() {
+		// Supprime les doublons avant de sauvegarder
+		supprimerDoublons();
 	    try {
 	        BufferedWriter bw = new BufferedWriter(new FileWriter(csvFileName));
 	        bw.write("Id;Titre;Auteur;Annee Publication;Genre");
@@ -94,31 +107,39 @@ public class LivreModel implements LivreModelInterface {
 	        }
 	        bw.close();
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	System.err.println("Erreur lors de la sauvegarde du fichier CSV : " + e.getMessage());
 	    }
 	}
 
 	@Override
 	public void lireCSV() {
 		// TODO Auto-generated method stub
+		liste.clear();
+		Set<Integer> ids = new HashSet<>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(csvFileName));
 			br.readLine();
 			String line;
 			while((line=br.readLine())!=null) {
 				String[] words= line.split(";");
+				if(words.length<5) continue;
+				
 				int id = Integer.parseInt(words[0]);
 				String titre= words[1];
 				String auteur= words[2];
 				int anneePub= Integer.parseInt(words[3]);
 				String genre= words[4];
-				Livre livre= new Livre();
-				livre.setIsbn(id);
-				livre.setTitre(titre);
-				livre.setAuteur(auteur);
-				livre.setAnneePublication(anneePub);
-				livre.setGenre(genre);
-				liste.add(livre);
+				
+				if(!ids.contains(id)) {
+					ids.add(id);
+					Livre livre = new Livre();
+					livre.setIsbn(id);
+					livre.setTitre(titre);
+					livre.setAuteur(auteur);
+					livre.setAnneePublication(anneePub);
+					livre.setGenre(genre);
+					liste.add(livre);
+				}
 			}
 			br.close();
 		}catch(IOException e) {
@@ -126,5 +147,32 @@ public class LivreModel implements LivreModelInterface {
 		}
 	}
 
-
+	public void nettoyerCSV() {
+		Set<String> lignesUniques = new HashSet<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFileName))) {
+            br.readLine(); // Ignorer l'en-tête
+            String line;
+            while ((line = br.readLine()) != null) {
+                lignesUniques.add(line); // Ajoute uniquement les lignes uniques
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier CSV : " + e.getMessage());
+        }
+        
+        // Réécriture du fichier avec les données nettoyées
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFileName))) {
+            bw.write("id;nom;motDePasse;role"); // Réécriture de l'en-tête
+            for (String ligne : lignesUniques) {
+                bw.newLine();
+                bw.write(ligne);
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde du fichier CSV : " + e.getMessage());
+        }
+	}
+	
+	public void supprimerDoublons() {
+		Set<String> livreUnique = new HashSet<>();
+		liste.removeIf(livre -> !livreUnique.add(livre.getTitre()+livre.getAuteur()+livre.getAnneePublication()+livre.getGenre()));
+	}
 }
