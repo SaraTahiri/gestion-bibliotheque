@@ -1,0 +1,68 @@
+/* package view;
+
+import model.*;
+import view.*;
+import controller.*;
+
+public class RetourTest  {
+    public static void main(String[] args) {
+        RetourModel retourModel = new RetourModel("retours.csv");
+        RetourFrame frame = new RetourFrame();
+        RetourController controller = new RetourController(frame, retourModel);
+        frame.setVisible(true);
+    }
+} */
+/*package view;
+
+import model.*;
+import java.time.LocalDate;
+
+import controller.RetourController;
+
+public class RetourTest {
+    public static void main(String[] args) {
+        // Création des retours avec les détails nécessaires
+        Retour retour1 = new Retour(1, 1, "Adam", 
+                101, "Java Programming", 
+                LocalDate.of(2024, 1, 1), 
+                LocalDate.of(2024, 1, 15), 
+                null);
+
+        Retour retour2 = new Retour(2, 2, "mery", 
+                102, "Data Structures", 
+                LocalDate.of(2024, 1, 5), 
+                LocalDate.of(2024, 1, 20), 
+                null);
+
+        
+        RetourModel retourModel = new RetourModel("retours.csv");
+        RetourFrame frame = new RetourFrame();
+        RetourController controller = new RetourController(frame, retourModel);
+        controller.updateTableData();
+        frame.setVisible(true);
+    }
+}
+*/
+package view;
+import controller.RetourController;
+import model.ModeleEmprunt;
+import model.RetourModel;
+
+public class RetourTest {
+    public static void main(String[] args) {
+        // Charger les emprunts
+        ModeleEmprunt modeleEmprunt = new ModeleEmprunt("emprunts.csv");
+
+        // Créer le modèle des retours
+        RetourModel retourModel = new RetourModel(modeleEmprunt);
+
+        // Créer la vue
+        RetourFrame frame = new RetourFrame();
+
+        // Créer le contrôleur et le connecter
+        RetourController controller = new RetourController(frame, retourModel);
+
+        // Afficher la fenêtre
+        frame.setVisible(true);
+    }
+}

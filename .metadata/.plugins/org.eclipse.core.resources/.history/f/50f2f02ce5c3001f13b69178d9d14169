@@ -1,0 +1,115 @@
+package view;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import model.Retour;
+
+public class RetourFrame extends JPanel {
+
+    private JTable tableEmprunts;
+    private DefaultTableModel tableModel;
+    private JTextField idTextField;
+    private JTextField idUtilisateurTextField;
+    private JTextField idLivreTextField;
+    private JTextField dateEmpruntTextField;
+    private JTextField dateRetourPrevueTextField;
+    private JTextField dateRetourEffectiveTextField;
+    private JButton boutonEnregistrer;
+    private JButton boutonRafraichir;
+
+    public RetourFrame() {
+        setLayout(new BorderLayout(10, 10));
+
+        // Table pour lister les emprunts non retournés
+        String[] colonnes = { "ID Emprunt", "ID Utilisateur", "ID Livre", "Date Emprunt", "Date Retour Prevue", "Date Retour Effective" };
+        tableModel = new DefaultTableModel(colonnes, 0);
+        tableEmprunts = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(tableEmprunts);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Emprunts non retournés"));
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Bas de la fenêtre: saisir la date de retour + boutons
+        JPanel basPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        basPanel.add(new JLabel("ID Emprunt :"));
+        idTextField = new JTextField(10);
+        basPanel.add(idTextField);
+        
+        basPanel.add(new JLabel("ID Utilisateur :"));
+        idUtilisateurTextField = new JTextField(10);
+        basPanel.add(idUtilisateurTextField);
+        
+        basPanel.add(new JLabel("ID Livre :"));
+        idLivreTextField = new JTextField(10);
+        basPanel.add(idLivreTextField);
+        
+        basPanel.add(new JLabel("Date Emprunt :"));
+        dateEmpruntTextField = new JTextField(10);
+        basPanel.add(dateEmpruntTextField);
+        
+        basPanel.add(new JLabel("Date Retour Prévue :"));
+        dateRetourPrevueTextField = new JTextField(10);
+        basPanel.add(dateRetourPrevueTextField);
+        
+        basPanel.add(new JLabel("Date Retour Effective :"));
+        dateRetourEffectiveTextField = new JTextField(10);
+        basPanel.add(dateRetourEffectiveTextField);
+
+        boutonEnregistrer = new JButton("Enregistrer le Retour");
+        basPanel.add(boutonEnregistrer);
+
+        boutonRafraichir = new JButton("Rafraîchir");
+        basPanel.add(boutonRafraichir);
+
+        add(basPanel, BorderLayout.SOUTH);
+    }
+
+    // Méthode pour remplir le tableau avec une liste de retours
+    public void setEmpruntsData(Object[][] data) {
+        tableModel.setRowCount(0); // On vide le tableau
+        for (Object[] row : data) {
+            tableModel.addRow(row);
+        }
+    }
+
+    // Getters pour les composants
+    public JTable getTableEmprunts() {
+        return tableEmprunts;
+    }
+
+    public DefaultTableModel getTableModel() {
+        return tableModel;
+    }
+
+    public JTextField getIdTextField() {
+        return idTextField;
+    }
+
+    public JTextField getIdUtilisateurTextField() {
+        return idUtilisateurTextField;
+    }
+
+    public JTextField getIdLivreTextField() {
+        return idLivreTextField;
+    }
+
+    public JTextField getDateEmpruntTextField() {
+        return dateEmpruntTextField;
+    }
+
+    public JTextField getDateRetourPrevueTextField() {
+        return dateRetourPrevueTextField;
+    }
+
+    public JTextField getDateRetourEffectiveTextField() {
+        return dateRetourEffectiveTextField;
+    }
+
+    public JButton getBoutonEnregistrer() {
+        return boutonEnregistrer;
+    }
+
+    public JButton getBoutonRafraichir() {
+        return boutonRafraichir;
+    }
+}

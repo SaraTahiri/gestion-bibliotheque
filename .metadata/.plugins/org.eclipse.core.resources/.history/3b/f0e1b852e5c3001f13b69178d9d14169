@@ -1,0 +1,109 @@
+package view;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import model.Retour;
+
+package view;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class RetourFrame extends JFrame {
+    private JTable table;
+    private DefaultTableModel model;
+    private JButton calculPenaliteButton;
+    private JTextField dateRetourEffectiveField;
+    private JLabel penaliteLabel;
+
+    public RetourFrame() {
+        setTitle("Gestion des Retours");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Création de la table
+        String[] columnNames = {"ID Emprunt", "ID Livre", "Nom du Livre", "ID Utilisateur", 
+                                "Nom Utilisateur", "Date Emprunt", "Date Retour Prévue", "Date Retour Effective", "Pénalité"};
+        model = new DefaultTableModel(columnNames, 0);
+        table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        // Panel de calcul de pénalité et date de retour effective
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+
+        JLabel labelDateRetour = new JLabel("Date Retour Effective : ");
+        dateRetourEffectiveField = new JTextField(10);
+        panel.add(labelDateRetour);
+        panel.add(dateRetourEffectiveField);
+
+        calculPenaliteButton = new JButton("Calculer Pénalité");
+        panel.add(calculPenaliteButton);
+
+        penaliteLabel = new JLabel("Pénalité : ");
+        panel.add(penaliteLabel);
+
+        // Ajout des éléments à la fenêtre principale
+        setLayout(new BorderLayout());
+        add(scrollPane, BorderLayout.CENTER);
+        add(panel, BorderLayout.SOUTH);
+
+        // Action du bouton de calcul de pénalité
+        calculPenaliteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculerPenalite();
+            }
+        });
+    }
+
+    // Méthode pour calculer la pénalité
+    private void calculerPenalite() {
+        try {
+            // Récupérer la date de retour effective
+            String dateRetourEffective = dateRetourEffectiveField.getText();
+
+            // Supposons que la pénalité soit de 50 dirhams par jour de retard
+            // Calculer la pénalité en fonction de la date de retour prévue et effective (simplifié ici)
+            // Il faudra adapter cette logique pour inclure le calcul réel du retard
+            if (dateRetourEffective.isEmpty()) {
+                throw new Exception("Veuillez entrer une date de retour effective.");
+            }
+
+            // Calcul de la pénalité en fonction du retard (c'est ici que tu implémenteras la logique métier)
+            double penalite = 50;  // Ex : 50 dirhams par jour de retard
+
+            penaliteLabel.setText("Pénalité : " + penalite + " dirhams");
+
+        } catch (Exception ex) {
+            // Afficher un message d'erreur si une exception se produit
+            JOptionPane.showMessageDialog(this, "Erreur : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Méthode pour mettre à jour le tableau avec des données (ici un exemple statique)
+    public void updateTableData(Object[][] data) {
+        // Réinitialiser le modèle du tableau
+        model.setRowCount(0);
+        for (Object[] row : data) {
+            model.addRow(row);
+        }
+    }
+
+    public static void main(String[] args) {
+        RetourFrame vue = new RetourFrame();
+        vue.setVisible(true);
+
+        // Exemple d'ajout de données à la table
+        Object[][] data = {
+            {1, 101, "Livre A", 1001, "Alice", "01/01/2024", "15/01/2024", "16/01/2024", ""},
+            {2, 102, "Livre B", 1002, "Bob", "05/01/2024", "20/01/2024", "22/01/2024", ""}
+        };
+        vue.updateTableData(data);
+    }
+}

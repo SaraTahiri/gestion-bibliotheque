@@ -1,0 +1,90 @@
+package model;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+public class Retour {
+    private int idEmprunt;
+    private int idUtilisateur;   // ID de l'utilisateur
+    private String nomUtilisateur; // Nom de l'utilisateur
+    private int idLivre;         // ID du livre
+    private String titreLivre;   // Titre du livre
+    private LocalDate dateEmprunt;
+    private LocalDate dateRetourPrevue;
+    private LocalDate dateRetourEffective;
+
+    // Constructeur
+    public Retour(int idEmprunt, int idUtilisateur, String nomUtilisateur, 
+                  int idLivre, String titreLivre, 
+                  LocalDate dateEmprunt, LocalDate dateRetourPrevue, LocalDate dateRetourEffective) {
+        this.idEmprunt = idEmprunt;
+        this.idUtilisateur = idUtilisateur;
+        this.nomUtilisateur = nomUtilisateur;
+        this.idLivre = idLivre;
+        this.titreLivre = titreLivre;
+        this.dateEmprunt = dateEmprunt;
+        this.dateRetourPrevue = dateRetourPrevue;
+        this.dateRetourEffective = dateRetourEffective;
+    }
+
+    // Getters
+    public int getIdEmprunt() {
+        return idEmprunt;
+    }
+
+    public int getIdUtilisateur() {
+        return idUtilisateur;
+    }
+
+    public String getNomUtilisateur() {
+        return nomUtilisateur;
+    }
+
+    public int getIdLivre() {
+        return idLivre;
+    }
+
+    public String getTitreLivre() {
+        return titreLivre;
+    }
+
+    public LocalDate getDateEmprunt() {
+        return dateEmprunt;
+    }
+
+    public LocalDate getDateRetourPrevue() {
+        return dateRetourPrevue;
+    }
+    public void setDateRetourEffective(LocalDate dateRetourPrevue ) {
+    	this.dateRetourPrevue=dateRetourPrevue;
+    	
+    }
+    public LocalDate getDateRetourEffective() {
+        return dateRetourEffective;
+    }
+
+    @Override
+    public String toString() {
+        return "Retour{" +
+                "idEmprunt=" + idEmprunt +
+                ", utilisateur=" + nomUtilisateur +  // Affichage du nom de l'utilisateur
+                ", livre=" + titreLivre +              // Affichage du titre du livre
+                ", dateEmprunt=" + dateEmprunt +
+                ", dateRetourPrevue=" + dateRetourPrevue +
+                ", dateRetourEffective=" + dateRetourEffective +
+                '}';
+    }
+    
+    public double calculerPenalite() {
+        if (dateRetourEffective != null && dateRetourEffective.isAfter(dateRetourPrevue)) {
+            long joursDeRetard = ChronoUnit.DAYS.between(dateRetourPrevue, dateRetourEffective);
+            return joursDeRetard * 50;  // 50 dirhams par jour de retard
+        }
+        return 0;  // Aucune pénalité si le livre est retourné dans les temps
+    }
+
+	public Object getUtilisateur() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

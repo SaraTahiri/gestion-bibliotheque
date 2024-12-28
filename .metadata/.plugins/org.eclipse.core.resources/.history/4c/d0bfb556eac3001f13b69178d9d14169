@@ -1,0 +1,56 @@
+/*package view;
+
+import model.*;
+import view.*;
+import controller.*;
+
+public class RetourTest  {
+    public static void main(String[] args) {
+        RetourModel retourModel = new RetourModel("retours.csv");
+        RetourFrame frame = new RetourFrame();
+        RetourController controller = new RetourController(frame, retourModel);
+        frame.setVisible(true);
+    }
+} */
+package view;
+
+import model.*;
+import view.*;
+import controller.*;
+
+import java.time.LocalDate;
+
+public class RetourTest {
+    public static void main(String[] args) {
+        // Créer le modèle pour les retours
+        RetourModel retourModel = new RetourModel("retours.csv");
+
+        // Ajouter des données fictives
+        Utilisateur utilisateur1 = new Utilisateur(1, "Alice");
+        Utilisateur utilisateur2 = new Utilisateur(2, "Bob");
+
+        Livre livre1 = new Livre(101, "Java Programming");
+        Livre livre2 = new Livre(102, "Data Structures");
+
+        Retour retour1 = new Retour(1, utilisateur1, livre1,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 1, 15),
+                null);
+
+        Retour retour2 = new Retour(2, utilisateur2, livre2,
+                LocalDate.of(2024, 1, 5),
+                LocalDate.of(2024, 1, 20),
+                null);
+
+        retourModel.getListe().add(retour1);
+        retourModel.getListe().add(retour2);
+
+        // Sauvegarder dans le fichier CSV
+        retourModel.sauvegarderCSV();
+
+        // Initialiser la vue et le contrôleur
+        RetourFrame frame = new RetourFrame();
+        RetourController controller = new RetourController(frame, retourModel);
+        frame.setVisible(true);
+    }
+}

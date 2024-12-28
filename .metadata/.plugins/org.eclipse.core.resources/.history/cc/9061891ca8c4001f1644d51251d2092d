@@ -1,0 +1,155 @@
+package model;
+
+import java.io.*;
+import java.util.*;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+import exception.*;
+
+public class RetourModel implements RetourModelInterface {
+    private List<Retour> liste = new ArrayList<>();
+    private String csvFileName;
+
+    public RetourModel(String csvFileName) {
+        this.csvFileName = csvFileName;
+
+        // Ajouter des données fictives
+        Retour retour1 = new Retour(1, 1, "Adam", 101, "Java Programming",
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 1, 15),
+                null);
+
+        Retour retour2 = new Retour(2, 2, "mery", 102, "Data Structures",
+                LocalDate.of(2024, 1, 5),
+                LocalDate.of(2024, 1, 20),
+                null);
+
+        liste.add(retour1);
+        liste.add(retour2);
+    }
+   
+    @Override
+    public void ajouterRetour(Retour retour) {
+        liste.add(retour);
+        this.sauvegarderCSV();
+    }
+
+    @Override
+    public Retour rechercherParID(int idEmprunt) throws RetourNotFoundException {
+        return liste.stream()
+                .filter(r -> r.getIdEmprunt() == idEmprunt)
+                .findFirst()
+                .orElseThrow(() -> new RetourNotFoundException(idEmprunt));
+    }
+
+    public void modifierRetour(int idEmprunt, LocalDate nouvelleDateRetourEffective) throws RetourNotFoundException {
+        Retour retour = rechercherParID(idEmprunt);
+        retour.setDateRetourEffective(nouvelleDateRetourEffective);
+        this.sauvegarderCSV();
+    }
+
+    @Override
+    public void supprimerRetour(int idEmprunt) throws RetourNotFoundException {
+        Retour retour = rechercherParID(idEmprunt);
+        liste.remove(retour);
+        this.sauvegarderCSV();
+    }
+
+    @Override
+    public void listerRetours() {
+        liste.forEach(System.out::println);
+    }
+
+    @Override
+    public void sauvegarderCSV() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFileName))) {
+            bw.write("idEmprunt;idUtilisateur;nomUtilisateur;idLivre;titreLivre;dateEmprunt;dateRetourPrevue;dateRetourEffective");
+            for (Retour retour : liste) {
+                bw.newLine();
+                bw.write(retour.getIdEmprunt() + ";" +
+                        retour.getIdUser() + ";" +
+                        retour.getNomUtilisateur() + ";" +
+                        retour.getIdLivre() + ";" +
+                        retour.getTitreLivre() + ";" +
+                        retour.getDateEmprunt() + ";" +
+                        retour.getDateRetourPrevue() + ";" +
+                        retour.getDateRetourEffective());
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde du fichier CSV : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void lireCSV() {
+        liste.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFileName))) {
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] words = line.split(";");
+                if (words.length < 8) continue;
+
+                int idEmprunt = Integer.parseInt(words[0]);
+                int idUtilisateur = Integer.parseInt(words[1]);
+                String nomUtilisateur = words[2];
+                int idLivre = Integer.parseInt(words[3]);
+                String titreLivre = words[4];
+                LocalDate dateEmprunt = LocalDate.parse(words[5]);
+                LocalDate dateRetourPrevue = LocalDate.parse(words[6]);
+                LocalDate dateRetourEffective = words[7].isEmpty() ? null : LocalDate.parse(words[7]);
+
+                Retour retour = new Retour(idEmprunt, idUtilisateur, nomUtilisateur, idLivre, titreLivre,
+                                           dateEmprunt, dateRetourPrevue, dateRetourEffective);
+                liste.add(retour);
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier CSV : " + e.getMessage());
+        }
+    }
+
+    public double calculerPenalite(Retour retour) {
+        if (retour.getDateRetourEffective() != null && retour.getDateRetourEffective().isAfter(retour.getDateRetourPrevue())) {
+            long joursDeRetard = ChronoUnit.DAYS.between(retour.getDateRetourPrevue(), retour.getDateRetourEffective());
+            return joursDeRetard * 50;
+        }
+        return 0;
+    }
+
+    public void chargerDepuisEmprunts(String empruntCsvFile) {
+        try (BufferedReader br = new BufferedReader(new FileReader(empruntCsvFile))) {
+            String line;
+            br.readLine(); // Ignorer la première ligne (en-têtes)
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length < 5) continue;
+
+                int idEmprunt = Integer.parseInt(parts[0]);
+                String titreLivre = parts[1];
+                int idUtilisateur = Integer.parseInt(parts[2]);
+                LocalDate dateEmprunt = LocalDate.parse(parts[3]);
+                LocalDate dateRetourPrevue = LocalDate.parse(parts[4]);
+
+                // Créer un objet Retour
+                Retour retour = new Retour(
+                    idEmprunt,
+                    idUtilisateur,
+                    "Nom Utilisateur", // Remplacer par une méthode pour obtenir le nom réel si possible
+                    0,                 // ID du livre (remplir avec les bonnes données si disponibles)
+                    titreLivre,
+                    dateEmprunt,
+                    dateRetourPrevue,
+                    null // Date de retour effective non définie
+                );
+                liste.add(retour);
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier CSV des emprunts : " + e.getMessage());
+        }
+    public List<Retour> getListe() {
+        return new ArrayList<>(liste);
+    }
+}
+

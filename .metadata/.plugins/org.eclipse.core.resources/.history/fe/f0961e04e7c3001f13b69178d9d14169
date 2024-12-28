@@ -1,0 +1,19 @@
+package model;
+
+public class Livre {
+    private int id;
+    private String titre;
+    private String auteur;
+
+    // Constructeur
+    public Livre(int id, String titre, String auteur) {
+        this.id = id;
+        this.titre = titre;
+        this.auteur = auteur;
+    }
+
+    // Getters
+    public String getTitre() {
+        return titre;
+    }
+}

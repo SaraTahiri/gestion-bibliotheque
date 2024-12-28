@@ -1,0 +1,84 @@
+package model;
+
+public class Retour {
+    private int idEmprunt;
+    private Utilisateur utilisateur;   // Référence à l'objet Utilisateur
+    private Livre livre;               // Référence à l'objet Livre
+    private String dateEmprunt;
+    private String dateRetourPrevue;
+    private String dateRetourEffective;
+
+    // Constructeur
+    public Retour(int idEmprunt, Utilisateur utilisateur, Livre livre, 
+                  String dateEmprunt, String dateRetourPrevue, String dateRetourEffective) {
+        this.idEmprunt = idEmprunt;
+        this.utilisateur = utilisateur;
+        this.livre = livre;
+        this.dateEmprunt = dateEmprunt;
+        this.dateRetourPrevue = dateRetourPrevue;
+        this.dateRetourEffective = dateRetourEffective;
+    }
+
+   
+
+	// Getters et Setters
+    public int getIdEmprunt() {
+        return idEmprunt;
+    }
+
+    public void setIdEmprunt(int idEmprunt) {
+        this.idEmprunt = idEmprunt;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    public Livre getLivre() {
+        return livre;
+    }
+
+    public void setLivre(Livre livre) {
+        this.livre = livre;
+    }
+
+    public String getDateEmprunt() {
+        return dateEmprunt;
+    }
+
+    public void setDateEmprunt(String dateEmprunt) {
+        this.dateEmprunt = dateEmprunt;
+    }
+
+    public String getDateRetourPrevue() {
+        return dateRetourPrevue;
+    }
+
+    public void setDateRetourPrevue(String dateRetourPrevue) {
+        this.dateRetourPrevue = dateRetourPrevue;
+    }
+
+    public String getDateRetourEffective() {
+        return dateRetourEffective;
+    }
+
+    public void setDateRetourEffective(String dateRetourEffective) {
+        this.dateRetourEffective = dateRetourEffective;
+    }
+
+    @Override
+    public String toString() {
+        return "Retour{" +
+                "idEmprunt='" + idEmprunt + '\'' +
+                ", utilisateur=" + utilisateur.getNom() +   // Afficher le nom de l'utilisateur
+                ", livre=" + livre.getTitre() +               // Afficher le titre du livre
+                ", dateEmprunt='" + dateEmprunt + '\'' +
+                ", dateRetourPrevue='" + dateRetourPrevue + '\'' +
+                ", dateRetourEffective='" + dateRetourEffective + '\'' +
+                '}';
+    }
+}

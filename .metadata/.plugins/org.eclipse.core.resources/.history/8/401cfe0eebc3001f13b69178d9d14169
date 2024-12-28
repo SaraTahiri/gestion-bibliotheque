@@ -1,0 +1,134 @@
+package model;
+
+import java.io.*;
+import java.util.*;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+import exception.*;
+
+public class RetourModel implements RetourModelInterface {
+    private List<Retour> liste = new ArrayList<>();
+    private String csvFileName;
+
+    public RetourModel(String csvFileName) {
+        this.csvFileName = csvFileName;
+    }
+
+    // Ajouter un retour
+    @Override
+    public void ajouterRetour(Retour retour) {
+        liste.add(retour);
+        this.sauvegarderCSV();
+    }
+
+    // Rechercher un retour par ID de l'emprunt
+    @Override
+    public Retour rechercherParID(int idEmprunt) throws RetourNotFoundException {
+        return liste.stream()
+                .filter(r -> r.getIdEmprunt() == idEmprunt)
+                .findFirst()
+                .orElseThrow(() -> new RetourNotFoundException(idEmprunt));
+    }
+
+    // Modifier un retour
+    public void modifierRetour(int idEmprunt, LocalDate nouvelleDateRetourEffective) throws RetourNotFoundException {
+        Retour retour = rechercherParID(idEmprunt);
+        retour.setDateRetourEffective(nouvelleDateRetourEffective);
+        this.sauvegarderCSV();
+    }
+
+    // Supprimer un retour
+    @Override
+    public void supprimerRetour(int idEmprunt) throws RetourNotFoundException {
+        Retour retour = rechercherParID(idEmprunt);
+        liste.remove(retour);
+        this.sauvegarderCSV();
+    }
+
+    // Afficher tous les retours
+    @Override
+    public void listerRetours() {
+        liste.forEach(System.out::println);
+    }
+
+    // Sauvegarder la liste des retours dans un fichier CSV
+    @Override
+    public void sauvegarderCSV() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFileName))) {
+            bw.write("idEmprunt;idUtilisateur;nomUtilisateur;idLivre;titreLivre;dateEmprunt;dateRetourPrevue;dateRetourEffective");
+            for (Retour retour : liste) {
+                bw.newLine();
+                bw.write(retour.getIdEmprunt() + ";" +
+                        retour.getIdUtilisateur() + ";" +
+                        retour.getNomUtilisateur() + ";" +
+                        retour.getIdLivre() + ";" +
+                        retour.getTitreLivre() + ";" +
+                        retour.getDateEmprunt() + ";" +
+                        retour.getDateRetourPrevue() + ";" +
+                        retour.getDateRetourEffective());
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde du fichier CSV : " + e.getMessage());
+        }
+    }
+
+    // Lire les retours depuis un fichier CSV
+    @Override
+    public void lireCSV() {
+        liste.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFileName))) {
+            br.readLine();  // Ignorer la première ligne (entêtes)
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] words = line.split(";");
+                if (words.length < 8) continue;
+
+                int idEmprunt = Integer.parseInt(words[0]);
+                int idUtilisateur = Integer.parseInt(words[1]);
+                String nomUtilisateur = words[2];
+                int idLivre = Integer.parseInt(words[3]);
+                String titreLivre = words[4];
+                LocalDate dateEmprunt = LocalDate.parse(words[5]);
+                LocalDate dateRetourPrevue = LocalDate.parse(words[6]);
+                LocalDate dateRetourEffective = LocalDate.parse(words[7]);
+
+                Retour retour = new Retour(idEmprunt, idUtilisateur, nomUtilisateur, idLivre, titreLivre, 
+                                           dateEmprunt, dateRetourPrevue, dateRetourEffective);
+                liste.add(retour);
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier CSV : " + e.getMessage());
+        }
+    }
+
+    // Calculer les pénalités pour un retour
+    public double calculerPenalite(Retour retour) {
+        if (retour.getDateRetourEffective().isAfter(retour.getDateRetourPrevue())) {
+            long joursDeRetard = ChronoUnit.DAYS.between(retour.getDateRetourPrevue(), retour.getDateRetourEffective());
+            return joursDeRetard * 50;  // Pénalité de 50 dirhams par jour de retard
+        }
+        return 0;  // Aucune pénalité si le retour est dans les temps
+    }
+
+    // Retourner la liste des retours
+    public List<Retour> getListe() {
+        return new ArrayList<>(liste);
+    }
+
+    Retour retour1 = new Retour(1, 1, "Alice", 101, "Java Programming",
+            LocalDate.of(2024, 1, 1),
+            LocalDate.of(2024, 1, 15),
+            null);
+
+Retour retour2 = new Retour(2, 2, "Bob", 102, "Data Structures",
+            LocalDate.of(2024, 1, 5),
+            LocalDate.of(2024, 1, 20),
+            null);
+
+//Ajouter les retours au modèle
+retourModel.getListe().add(retour1);
+retourModel.getListe().add(retour2);
+    
+}
+

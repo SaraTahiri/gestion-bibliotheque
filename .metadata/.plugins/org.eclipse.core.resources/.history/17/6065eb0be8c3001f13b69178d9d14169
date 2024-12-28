@@ -1,0 +1,47 @@
+package model;
+
+import java.util.*;
+import java.io.*;
+
+public class UtilisateurModel {
+    private List<Utilisateur> utilisateurs = new ArrayList<>();
+    private String csvFileName;
+
+    public UtilisateurModel(String csvFileName) {
+        this.csvFileName = csvFileName;
+        lireCSV();
+    }
+
+    public void ajouterUtilisateur(Utilisateur utilisateur) {
+        utilisateurs.add(utilisateur);
+        sauvegarderCSV();
+    }
+
+   
+
+    private void sauvegarderCSV() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFileName))) {
+            for (Utilisateur utilisateur : utilisateurs) {
+                bw.write(utilisateur.getId() + ";" + utilisateur.getNom());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void lireCSV() {
+        utilisateurs.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                int id = Integer.parseInt(parts[0]);
+                String nom = parts[1];
+                utilisateurs.add(new Utilisateur(id, nom));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

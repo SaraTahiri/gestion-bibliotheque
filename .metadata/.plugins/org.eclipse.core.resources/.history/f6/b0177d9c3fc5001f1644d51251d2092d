@@ -1,0 +1,3 @@
+idEmprunt;idUtilisateur;nomUtilisateur;idLivre;titreLivre;dateEmprunt;dateRetourPrevue;dateRetourEffective
+1;1;Adam;101;Java Programming;2024-01-01;2024-01-15;2024-01-18
+2;2;mery;102;Data Structures;2024-01-05;2024-01-20;null

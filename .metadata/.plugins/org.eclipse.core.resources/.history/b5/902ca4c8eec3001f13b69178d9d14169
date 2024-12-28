@@ -1,0 +1,46 @@
+/*package view;
+
+import model.*;
+import view.*;
+import controller.*;
+
+public class RetourTest  {
+    public static void main(String[] args) {
+        RetourModel retourModel = new RetourModel("retours.csv");
+        RetourFrame frame = new RetourFrame();
+        RetourController controller = new RetourController(frame, retourModel);
+        frame.setVisible(true);
+    }
+} */
+package view;
+
+import model.*;
+import java.time.LocalDate;
+
+import controller.RetourController;
+
+public class RetourTest {
+    public static void main(String[] args) {
+        // Création des retours avec les détails nécessaires
+        Retour retour1 = new Retour(1, 1, "Adam", 
+                101, "Java Programming", 
+                LocalDate.of(2024, 1, 1), 
+                LocalDate.of(2024, 1, 15), 
+                null);
+
+        Retour retour2 = new Retour(2, 2, "mery", 
+                102, "Data Structures", 
+                LocalDate.of(2024, 1, 5), 
+                LocalDate.of(2024, 1, 20), 
+                null);
+
+        // Afficher les informations des retours
+        System.out.println("Retour 1 : " + retour1.getNomUtilisateur() + " a emprunté " + retour1.getTitreLivre());
+        System.out.println("Retour 2 : " + retour2.getNomUtilisateur() + " a emprunté " + retour2.getTitreLivre());
+        RetourModel retourModel = new RetourModel("retours.csv");
+        RetourFrame frame = new RetourFrame();
+        RetourController controller = new RetourController(frame, retourModel);
+        controller.updateTableData();
+        frame.setVisible(true);
+    }
+}

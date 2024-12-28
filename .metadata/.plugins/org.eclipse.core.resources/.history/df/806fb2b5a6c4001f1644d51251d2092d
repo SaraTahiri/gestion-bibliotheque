@@ -1,0 +1,28 @@
+
+
+
+import controller.RetourController;
+import model.ModeleEmprunt;
+import model.Retour;
+import model.RetourModel;
+
+public class RetourTest {
+    public static void main(String[] args) {
+        // Charger les emprunts
+        ModeleEmprunt modeleEmprunt = new ModeleEmprunt("emprunts.csv");
+
+        // Créer le modèle des retours
+        RetourModel retourModel = new RetourModel("retours.csv");
+
+        
+
+        // Créer la vue
+        RetourFrame frame = new RetourFrame();
+
+        // Créer le contrôleur et le connecter
+        RetourController controller = new RetourController(frame, retourModel);
+
+        // Afficher la fenêtre
+        frame.setVisible(true);
+    }
+}

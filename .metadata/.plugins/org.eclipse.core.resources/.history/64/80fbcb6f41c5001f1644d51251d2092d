@@ -1,0 +1,47 @@
+package view;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+public class RetourFrame extends JFrame {
+    private JTable table;
+    private DefaultTableModel model;
+    private JButton calculPenaliteButton;
+    private JTextField dateRetourEffectiveField;
+    private JLabel penaliteLabel;
+ // Ajout du bouton "Modifier Date Retour Effective" dans le panneau
+    private JButton modifierDateRetourButton;
+
+    public RetourFrame() {
+        // Configuration initiale de la fenêtre
+        setTitle("Gestion des Retours");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        String[] columnNames = {"ID Emprunt", "Nom du Livre", "ID Utilisateur", 
+                                "Date Emprunt", "Date Retour Prévue", "Date Retour Effective", "Pénalité"};
+        model = new DefaultTableModel(columnNames, 0);
+        table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        JPanel panel = new JPanel(new FlowLayout());
+        panel.add(new JLabel("Date Retour Effective :"));
+        dateRetourEffectiveField = new JTextField(10);
+        panel.add(dateRetourEffectiveField);
+
+        calculPenaliteButton = new JButton("Calculer Pénalité");
+        panel.add(calculPenaliteButton);
+
+        // Ajout du bouton pour modifier la date retour effective
+        modifierDateRetourButton = new JButton("Modifier Date Retour Effective");
+        panel.add(modifierDateRetourButton);
+
+        penaliteLabel = new JLabel("Pénalité : ");
+        panel.add(penaliteLabel);
+
+        add(scrollPane, BorderLayout.CENTER);
+        add(panel, BorderLayout.SOUTH);
+    }

@@ -1,0 +1,24 @@
+package model;
+
+import java.util.List;
+
+public interface RetourModelInterface {
+
+    // Ajouter un retour
+    void ajouterRetour(Retour retour);
+
+    // Mettre à jour un retour (par exemple, la date de retour effective)
+    void mettreAJourRetour(String idEmprunt, String dateRetourEffective);
+
+    // Obtenir tous les retours
+    List<Retour> getRetours();
+
+    // Obtenir les retours non retournés (dateRetourEffective vide)
+    List<Retour> getRetoursNonRetournes();
+
+    // Sauvegarder les retours dans un fichier CSV
+    void sauvegarderCSV();
+
+    // Lire les retours depuis un fichier CSV
+    void lireCSV();
+}

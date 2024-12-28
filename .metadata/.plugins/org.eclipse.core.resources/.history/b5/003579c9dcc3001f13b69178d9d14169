@@ -1,0 +1,12 @@
+public class RetourController {
+
+    public void traiterRetour(Retour retour) {
+        // Calculer la pénalité
+        double penalite = retour.calculerPenalite();
+        
+        // Afficher ou enregistrer la pénalité, et d'autres actions
+        System.out.println("La pénalité pour l'utilisateur " + retour.getUtilisateur().getNom() + " est de " + penalite + " dirhams.");
+        
+        // D'autres traitements peuvent être faits ici, par exemple, enregistrer l'historique de retour
+    }
+}

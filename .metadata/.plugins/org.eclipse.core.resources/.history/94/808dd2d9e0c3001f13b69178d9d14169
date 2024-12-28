@@ -1,0 +1,64 @@
+
+package model;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.io.*;
+import java.util.*;
+import exception.*;
+
+
+import java.time.LocalDate;
+
+public class Retour {
+    private int idEmprunt;
+    private Utilisateur utilisateur;   // Référence à l'objet Utilisateur
+    private Livre livre;               // Référence à l'objet Livre
+    private LocalDate dateEmprunt;
+    private LocalDate dateRetourPrevue;
+    private LocalDate dateRetourEffective;
+
+    // Constructeur
+    public Retour(int idEmprunt, Utilisateur utilisateur, Livre livre, 
+                  LocalDate dateEmprunt, LocalDate dateRetourPrevue, LocalDate dateRetourEffective) {
+        this.idEmprunt = idEmprunt;
+        this.utilisateur = utilisateur;
+        this.livre = livre;
+        this.dateEmprunt = dateEmprunt;
+        this.dateRetourPrevue = dateRetourPrevue;
+        this.dateRetourEffective = dateRetourEffective;
+    }
+
+    public Retour(int idEmprunt2, int idUtilisateur, String nomUtilisateur, int idLivre, String titreLivre,
+			LocalDate dateEmprunt2, LocalDate dateRetourPrevue2, LocalDate dateRetourEffective2) {
+		// TODO Auto-generated constructor stub
+	}
+
+	// Getters
+    public int getIdEmprunt() {
+        return idEmprunt;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public Livre getLivre() {
+        return livre;
+    }
+
+    public LocalDate getDateEmprunt() {
+        return dateEmprunt;
+    }
+
+    public LocalDate getDateRetourPrevue() {
+        return dateRetourPrevue;
+    }
+    public void setDateRetourEffective(LocalDate dateRetourEffective ) {
+        this.dateRetourEffective= dateRetourEffective;
+    }
+    
+    public LocalDate getDateRetourEffective() {
+        return dateRetourEffective;
+    }
+}

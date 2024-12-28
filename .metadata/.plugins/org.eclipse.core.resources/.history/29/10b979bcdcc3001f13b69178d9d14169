@@ -1,0 +1,60 @@
+package controller;
+
+import javax.swing.*;
+import model.Retour;
+import model.RetourModel;
+import model.Utilisateur;
+import model.Livre;
+import view.RetourFrame;
+
+public class RetourController {
+
+    private RetourModel modelRetour;
+    private RetourFrame viewRetour;
+
+    public RetourController(RetourModel modelRetour, RetourFrame viewRetour) {
+        this.modelRetour = modelRetour;
+        this.viewRetour = viewRetour;
+
+        // Ajouter les listeners pour les boutons
+        viewRetour.getBoutonEnregistrer().addActionListener(e -> ajouterRetour());
+        viewRetour.getBoutonRafraichir().addActionListener(e -> rechargerTable());
+    }
+
+    // Ajouter un retour
+    private void ajouterRetour() {
+        try {
+        	 int idEmprunt = Integer.parseInt(viewRetour.getIdTextField().getText());  // ID de l'emprunt (en entier)
+             int idUtilisateur = Integer.parseInt(viewRetour.getIdUtilisateurTextField().getText());  // ID de l'utilisateur (en entier)
+             int idLivre = Integer.parseInt(viewRetour.getIdLivreTextField().getText());
+            String dateEmprunt = viewRetour.getDateEmpruntTextField().getText();
+            String dateRetourPrevue = viewRetour.getDateRetourPrevueTextField().getText();
+            String dateRetourEffective = viewRetour.getDateRetourEffectiveTextField().getText();
+
+            
+            
+
+            // Création d'un utilisateur et d'un livre fictifs pour l'exemple
+            Utilisateur utilisateur = new Utilisateur(idUtilisateur, "Nom de l'utilisateur", "email", "motDePasse", "Membre");
+            Livre livre = new Livre(idLivre, "Titre du livre", "Auteur du livre","genre");
+
+            // Ajouter un retour au modèle
+            modelRetour.ajouterRetour(new Retour(idEmprunt, utilisateur, livre, dateEmprunt, dateRetourPrevue, dateRetourEffective));
+
+
+            // Recharger la table
+            rechargerTable();
+            JOptionPane.showMessageDialog(viewRetour, "Retour ajouté avec succès !");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(viewRetour, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Recharger la table des retours
+    private void rechargerTable() {
+        Object[][] donnees = modelRetour.getRetours().stream()
+            .map(r -> new Object[]{r.getIdEmprunt(), r.getUtilisateur().getNom(), r.getLivre().getTitre(), r.getDateEmprunt(), r.getDateRetourPrevue(), r.getDateRetourEffective()})
+            .toArray(Object[][]::new);
+        viewRetour.setEmpruntsData(donnees);
+    }
+}

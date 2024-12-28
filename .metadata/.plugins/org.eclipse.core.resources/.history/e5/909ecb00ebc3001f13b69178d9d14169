@@ -1,0 +1,64 @@
+package controller;
+
+import model.*;
+import view.RetourFrame;
+import exception.RetourNotFoundException;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+public class RetourController {
+    private RetourFrame vue;
+    private RetourModel retourModel;
+
+    public RetourController(RetourFrame vue, RetourModel retourModel) {
+        this.vue = vue;
+        this.retourModel = retourModel;
+
+        updateTableData();
+        vue.addCalculPenaliteListener(e -> calculerPenalite());
+    }
+
+    private void updateTableData() {
+        List<Retour> retours = retourModel.getListe();
+        Object[][] data = new Object[retours.size()][9];
+
+        for (int i = 0; i < retours.size(); i++) {
+            Retour retour = retours.get(i);
+            data[i] = new Object[]{
+                    retour.getIdEmprunt(),
+                    retour.getLivre().getId(),
+                    retour.getLivre().getTitre(),
+                    retour.getUtilisateur().getId(),
+                    retour.getUtilisateur().getNom(),
+                    retour.getDateEmprunt(),
+                    retour.getDateRetourPrevue(),
+                    retour.getDateRetourEffective(),
+                    ""
+            };
+        }
+        vue.updateTableData(data);
+    }
+
+    private void calculerPenalite() {
+        try {
+            int selectedRow = vue.getSelectedRow();
+            if (selectedRow == -1) throw new Exception("Veuillez sélectionner une ligne.");
+
+            String dateRetourEffectiveStr = vue.getDateRetourEffective();
+            LocalDate dateRetourEffective = LocalDate.parse(dateRetourEffectiveStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            int idEmprunt = (int) vue.getValueAt(selectedRow, 0);
+            Retour retour = retourModel.rechercherParID(idEmprunt);
+
+            retour.setDateRetourEffective(dateRetourEffective);
+            retourModel.modifierRetour(idEmprunt, dateRetourEffective);
+
+            double penalite = retourModel.calculerPenalite(retour);
+            vue.setValueAt(selectedRow, 8, penalite + " dirhams");
+        } catch (Exception e) {
+            vue.showError(e.getMessage());
+        }
+    }
+}

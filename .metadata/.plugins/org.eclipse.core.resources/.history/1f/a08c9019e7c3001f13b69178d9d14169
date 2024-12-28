@@ -1,0 +1,21 @@
+package model;
+
+public class Utilisateur {
+    private int id;
+    private String nom;
+    private String email;
+    private String role; // admin, membre, bibliothécaire
+
+    // Constructeur
+    public Utilisateur(int id, String nom, String email, String role) {
+        this.id = id;
+        this.nom = nom;
+        this.email = email;
+        this.role = role;
+    }
+
+    // Getters
+    public String getNom() {
+        return nom;
+    }
+}
