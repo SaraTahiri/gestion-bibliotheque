@@ -1,0 +1,18 @@
+package model;
+
+import java.util.List;
+
+public interface RapportStatistiqueInterface {
+
+    // Méthode pour générer le rapport des livres les plus empruntés
+    String genererRapportLivresPlusEmpruntes();
+
+    // Méthode pour générer le rapport des utilisateurs les plus actifs
+    String genererRapportUtilisateursPlusActifs();
+
+    // Méthode pour générer un rapport général sur la bibliothèque
+    String genererRapportGeneral();
+
+    // Méthode pour calculer les pénalités totales
+    String genererRapportPenalites(List<Retour> retours);
+}

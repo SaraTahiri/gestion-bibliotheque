@@ -1,0 +1,82 @@
+package model;
+
+import java.io.*;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
+public class RapportStatistiquesModel {
+
+    
+    public Map<String, Integer> getLivresEmpruntes(String empruntCsvFile) {
+        Map<String, Integer> livresEmpruntes = new HashMap<>();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(empruntCsvFile))) {
+            String line;
+            br.readLine(); 
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length < 5) continue;  // Si la ligne ne contient pas toutes les informations nécessaires
+                
+                String titreLivre = parts[1];  // Le titre du livre est en 2ème position
+                livresEmpruntes.put(titreLivre, livresEmpruntes.getOrDefault(titreLivre, 0) + 1);
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier CSV des emprunts : " + e.getMessage());
+        }
+
+        return livresEmpruntes;
+    }
+
+    // Méthode pour calculer les utilisateurs les plus actifs
+    public Map<Integer, Integer> getUtilisateursActifs(String empruntCsvFile) {
+        Map<Integer, Integer> utilisateursActifs = new HashMap<>();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(empruntCsvFile))) {
+            String line;
+            br.readLine(); // Ignorer la première ligne (en-têtes)
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length < 5) continue;
+
+                int idUtilisateur = Integer.parseInt(parts[2]);  // L'ID utilisateur est en 3ème position
+                utilisateursActifs.put(idUtilisateur, utilisateursActifs.getOrDefault(idUtilisateur, 0) + 1);
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier CSV des emprunts : " + e.getMessage());
+        }
+
+        return utilisateursActifs;
+    }
+
+    // Méthode pour récupérer et calculer les pénalités totales
+    public Map<Integer, Double> getPenalitesTotales(String retourCsvFile) {
+        Map<Integer, Double> penalitesTotales = new HashMap<>();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(retourCsvFile))) {
+            String line;
+            br.readLine(); // Ignorer la première ligne (en-têtes)
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length < 8) continue;
+
+                int idEmprunt = Integer.parseInt(parts[0]);
+                LocalDate dateRetourPrevue = LocalDate.parse(parts[6]);
+                LocalDate dateRetourEffective = parts[7].isEmpty() ? null : LocalDate.parse(parts[7]);
+
+                if (dateRetourEffective != null && dateRetourEffective.isAfter(dateRetourPrevue)) {
+                    long joursDeRetard = java.time.temporal.ChronoUnit.DAYS.between(dateRetourPrevue, dateRetourEffective);
+                    double penalite = joursDeRetard * 50;  // 50 dirhams par jour de retard
+                    penalitesTotales.put(idEmprunt, penalitesTotales.getOrDefault(idEmprunt, 0.0) + penalite);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier CSV des retours : " + e.getMessage());
+        }
+
+        return penalitesTotales;
+    }
+}
