@@ -15,6 +15,7 @@ public class Livre implements Comparable<Livre>{
 	private int anneePublication ;
 	private String genre ;
 	private int isbn ; //le id du livre
+	private int quantite;
 	private static int compteur;
 	
 	public Livre() {
@@ -23,14 +24,23 @@ public class Livre implements Comparable<Livre>{
 		isbn=compteur;
 	}
 
-	public Livre(String titre, String auteur, int anneePublication, String genre) {
+	public Livre(String titre, String auteur, int anneePublication, String genre, int quantite) {
 		super();
 		this.titre = titre;
 		this.auteur = auteur;
 		this.anneePublication = anneePublication;
 		this.genre = genre;
+		this.quantite=quantite;
 		compteur++;
 		isbn=compteur;
+	}
+
+	public int getQuantite() {
+		return quantite;
+	}
+
+	public void setQuantite(int quantite) {
+		this.quantite = quantite;
 	}
 
 	public String getTitre() {
@@ -75,7 +85,7 @@ public class Livre implements Comparable<Livre>{
 
 	@Override
 	public String toString() {
-	    return isbn + ";" + titre + ";" + auteur + ";" + anneePublication + ";" + genre;
+	    return isbn + ";" + titre + ";" + auteur + ";" + anneePublication + ";" + genre + ";" + quantite;
 	}
 
 	

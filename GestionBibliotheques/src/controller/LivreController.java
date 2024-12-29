@@ -13,6 +13,10 @@ import view.LivreView;
 public class LivreController {
     private LivreModel model;
     private LivreView view;
+    
+    public LivreController(LivreModel model) {
+    	this.model=model;
+    }
 
     public LivreController(LivreModel model, LivreView view) {
         this.model = model;
@@ -71,6 +75,7 @@ public class LivreController {
             String auteur = view.getAuteurField().getText();
             String anneePub = view.getAnnePubField().getText();
             String genre = view.getGenreField().getText();
+            String quantiteLivre= view.getQuantiteField().getText();
 
             if (titre.isEmpty() || auteur.isEmpty() || anneePub.isEmpty() || genre.isEmpty()) {
                 JOptionPane.showMessageDialog(view, "Tous les champs doivent être remplis.", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -78,11 +83,11 @@ public class LivreController {
             }
 
             int annee = Integer.parseInt(anneePub);
-
-            Livre livre = new Livre(titre, auteur, annee, genre);
+            int quantite = Integer.parseInt(quantiteLivre);
+            Livre livre = new Livre(titre, auteur, annee, genre,quantite);
             model.ajouterLivre(livre);
 
-            view.ajouterLivreDansTable(titre, auteur, String.valueOf(annee), genre);
+            view.ajouterLivreDansTable(livre.getIsbn(),titre, auteur, annee, genre,quantite);
 
             reinitialiserForm();
 
@@ -128,15 +133,17 @@ public class LivreController {
             String nvAuteur = view.getAuteurField().getText();
             String nvGenre = view.getGenreField().getText();
             String nvAnneePub = view.getAnnePubField().getText();
+            String quantiteLivre = view.getQuantiteField().getText();
 
-            if (nvTitre.isEmpty() || nvAuteur.isEmpty() || nvGenre.isEmpty() || nvAnneePub.isEmpty()) {
+            if (nvTitre.isEmpty() || nvAuteur.isEmpty() || nvGenre.isEmpty() || nvAnneePub.isEmpty() || quantiteLivre.isEmpty()) {
                 JOptionPane.showMessageDialog(view, "Tous les champs doivent être remplis.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             int annee = Integer.parseInt(nvAnneePub);
+            int quantite = Integer.parseInt(quantiteLivre);
 
-            model.modifierLivre(isbn, nvTitre, nvAuteur, nvGenre, annee);
+            model.modifierLivre(isbn, nvTitre, nvAuteur, nvGenre, annee,quantite);
 
             DefaultTableModel tableModel = (DefaultTableModel) view.livreTable.getModel();
             tableModel.setValueAt(nvTitre, selectedRow, 1);

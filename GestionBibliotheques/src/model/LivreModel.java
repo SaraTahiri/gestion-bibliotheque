@@ -36,7 +36,7 @@ public class LivreModel implements LivreModelInterface {
 	}
 
 	@Override
-	public void modifierLivre(int isbn, String nvTitre, String nvAuteur, String nvGenre, int nvAnneePub) throws LivreNotFoundException {
+	public void modifierLivre(int isbn, String nvTitre, String nvAuteur, String nvGenre, int nvAnneePub,int quantite) throws LivreNotFoundException {
 		// TODO Auto-generated method stub
 		Livre livre = rechercherParId(isbn);
 		if(livre != null) {
@@ -44,6 +44,8 @@ public class LivreModel implements LivreModelInterface {
 			livre.setAuteur(nvAuteur);
 			livre.setGenre(nvGenre);
 			livre.setAnneePublication(nvAnneePub);
+			livre.setQuantite(quantite);
+			this.sauvegarderCSV();
 		}
 		else {
 			throw new LivreNotFoundException(isbn);
@@ -56,6 +58,7 @@ public class LivreModel implements LivreModelInterface {
 		Livre livre = rechercherParId(isbn);
 		if(livre != null) {
 			liste.remove(livre);
+			this.sauvegarderCSV();
 		}else {
 			throw new LivreNotFoundException(isbn);
 		}
@@ -99,11 +102,11 @@ public class LivreModel implements LivreModelInterface {
 		supprimerDoublons();
 	    try {
 	        BufferedWriter bw = new BufferedWriter(new FileWriter(csvFileName));
-	        bw.write("Id;Titre;Auteur;Annee Publication;Genre");
+	        bw.write("Id;Titre;Auteur;Annee Publication;Genre;Quantite");
 	        for (Livre livre : liste) {
 	            bw.newLine();
 	            bw.write(livre.getIsbn() + ";" + livre.getTitre() + ";" + livre.getAuteur() + ";" + 
-	                     livre.getAnneePublication() + ";" + livre.getGenre());
+	                     livre.getAnneePublication() + ";" + livre.getGenre() + ";" + livre.getQuantite());
 	        }
 	        bw.close();
 	    } catch (IOException e) {
@@ -122,13 +125,14 @@ public class LivreModel implements LivreModelInterface {
 			String line;
 			while((line=br.readLine())!=null) {
 				String[] words= line.split(";");
-				if(words.length<5) continue;
+				if(words.length<6) continue;
 				
 				int id = Integer.parseInt(words[0]);
 				String titre= words[1];
 				String auteur= words[2];
 				int anneePub= Integer.parseInt(words[3]);
 				String genre= words[4];
+				int quantite = Integer.parseInt(words[5]);
 				
 				if(!ids.contains(id)) {
 					ids.add(id);
@@ -138,6 +142,7 @@ public class LivreModel implements LivreModelInterface {
 					livre.setAuteur(auteur);
 					livre.setAnneePublication(anneePub);
 					livre.setGenre(genre);
+					livre.setQuantite(quantite);
 					liste.add(livre);
 				}
 			}
